@@ -72,11 +72,11 @@
 		6D51AFA4EE12BFD190B7E6A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7289D20D70E1256D18567D93 /* PuzzleStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleStoreTests.swift; sourceTree = "<group>"; };
 		736D6C20F6B5E182A2FDCE32 /* puzzle_xFGY1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = puzzle_xFGY1.json; sourceTree = "<group>"; };
-		7661E63B5434BDFB3B92E055 /* ChessRecallTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ChessRecallTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		783F338DF8A577F824BDA824 /* ChessRecall.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ChessRecall.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7661E63B5434BDFB3B92E055 /* ChessRecallTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessRecallTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		783F338DF8A577F824BDA824 /* ChessRecall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChessRecall.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79B80A9E3D5726357C28BF79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		851D2AC0A7846DFD2F9C25B4 /* PuzzleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleView.swift; sourceTree = "<group>"; };
-		8B8664A225835017D11A5547 /* ChessRecallUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ChessRecallUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B8664A225835017D11A5547 /* ChessRecallUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChessRecallUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F68743904BEE85CC8EA993E /* ChessBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessBoardView.swift; sourceTree = "<group>"; };
 		96878587D6910C4882CD3AEC /* SpacedRepetitionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacedRepetitionService.swift; sourceTree = "<group>"; };
 		96CDCFE995683717363B228C /* puzzle_0S9PS.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = puzzle_0S9PS.json; sourceTree = "<group>"; };
@@ -327,7 +327,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					67781399A09DC8938E9C988E = {
 						TestTargetID = D76FCE48823AADC915EAD146;
@@ -482,6 +482,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 3KJ42RM854;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ChessRecall/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -534,6 +535,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -547,6 +549,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -558,6 +561,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 3KJ42RM854;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ChessRecall/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -646,6 +650,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -666,6 +671,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
