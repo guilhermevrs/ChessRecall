@@ -1,0 +1,62 @@
+name: ChessRecall
+options:
+  bundleIdPrefix: com.chessrecall
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.0"
+  createIntermediateGroups: true
+
+packages:
+  chesskit-swift:
+    url: https://github.com/chesskit-app/chesskit-swift
+    from: "0.17.0"
+
+targets:
+  ChessRecall:
+    type: application
+    platform: iOS
+    sources:
+      - path: ChessRecall
+    dependencies:
+      - package: chesskit-swift
+        product: ChessKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chessrecall.app
+        SWIFT_VERSION: "5.9"
+        INFOPLIST_FILE: ChessRecall/Info.plist
+        TARGETED_DEVICE_FAMILY: "1"
+        SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+        SUPPORTS_MACCATALYST: "NO"
+        GENERATE_INFOPLIST_FILE: "NO"
+
+  ChessRecallTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ChessRecallTests
+    resources:
+      - path: ChessRecallTests/Fixtures
+        buildPhase: resources
+    dependencies:
+      - target: ChessRecall
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chessrecall.tests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ChessRecall.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ChessRecall"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+        GENERATE_INFOPLIST_FILE: "YES"
+
+  ChessRecallUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: ChessRecallUITests
+    dependencies:
+      - target: ChessRecall
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chessrecall.uitests
+        SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
+        GENERATE_INFOPLIST_FILE: "YES"

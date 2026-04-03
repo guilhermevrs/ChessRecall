@@ -1,0 +1,55 @@
+# ── Xcode ────────────────────────────────────────────────────────────────────
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.xcuserstate
+*.xcscmblueprint
+
+# ── Swift Package Manager ────────────────────────────────────────────────────
+.build/
+.swiftpm/
+*.resolved
+
+# Keep Package.resolved for apps (reproducible builds)
+!ChessRecall.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+# ── CocoaPods (not used, but just in case) ───────────────────────────────────
+Pods/
+*.xcworkspace
+!*.xcodeproj/*.xcworkspace
+
+# ── Carthage (not used) ──────────────────────────────────────────────────────
+Carthage/Build/
+
+# ── macOS ────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*~
+.Trash
+
+# ── XcodeGen ─────────────────────────────────────────────────────────────────
+# project.yml is tracked; the generated .xcodeproj is reproducible via xcodegen generate
+# We track the xcodeproj so contributors don't need xcodegen installed to open the project
+# (Uncomment the next line if you prefer not to commit the generated project)
+# ChessRecall.xcodeproj/
+
+# ── Test artifacts ───────────────────────────────────────────────────────────
+*.xcresult
+
+# ── IDE ──────────────────────────────────────────────────────────────────────
+.idea/
+*.iml
