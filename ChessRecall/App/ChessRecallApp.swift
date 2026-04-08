@@ -87,10 +87,17 @@ struct ChessRecallApp: App {
             )
         )
 
-        // 8. Profiling — continuous CPU + memory profiling
-        Profiling.enable()
+        // 7. Profiling — correlates with RUM Time-to-Initial-Display (TTID) vital
+        // applicationLaunchSampleRate: percentage of app launches that are profiled (0–100).
+        // Default is 5; using 100 during early production to capture full signal.
+        // Lower this once baseline performance is established.
+        Profiling.enable(
+            with: Profiling.Configuration(
+                applicationLaunchSampleRate: 100
+            )
+        )
 
-        // 9. Stable anonymous user identity across launches
+        // 8. Stable anonymous user identity across launches
         let userIdKey = "dd_anonymous_user_id"
         let uid: String
         if let stored = UserDefaults.standard.string(forKey: userIdKey) {
@@ -107,7 +114,7 @@ struct ChessRecallApp: App {
             ]
         )
 
-        // 10. DEBUG mock (unchanged)
+        // 9. DEBUG mock (unchanged)
         #if DEBUG
         if ProcessInfo.processInfo.environment["MOCK_LICHESS"] == "1" {
             LichessAPIMock.register()
