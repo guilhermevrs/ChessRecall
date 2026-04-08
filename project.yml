@@ -10,6 +10,9 @@ packages:
   chesskit-swift:
     url: https://github.com/chesskit-app/chesskit-swift
     from: "0.17.0"
+  dd-sdk-ios:
+    url: https://github.com/DataDog/dd-sdk-ios.git
+    from: "3.1.0"
 
 targets:
   ChessRecall:
@@ -20,6 +23,20 @@ targets:
     dependencies:
       - package: chesskit-swift
         product: ChessKit
+      - package: dd-sdk-ios
+        product: DatadogCore
+      - package: dd-sdk-ios
+        product: DatadogRUM
+      - package: dd-sdk-ios
+        product: DatadogLogs
+      - package: dd-sdk-ios
+        product: DatadogTrace
+      - package: dd-sdk-ios
+        product: DatadogCrashReporting
+      - package: dd-sdk-ios
+        product: DatadogSessionReplay
+      - package: dd-sdk-ios
+        product: DatadogProfiling
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.chessrecall.app
@@ -29,6 +46,14 @@ targets:
         SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
         SUPPORTS_MACCATALYST: "NO"
         GENERATE_INFOPLIST_FILE: "NO"
+        DEVELOPMENT_TEAM: U5PV2566L6
+        CODE_SIGN_STYLE: Automatic
+    postBuildScripts:
+      - name: Set Build Number from Git
+        script: |
+          BUILD=$(git -C "$SRCROOT" rev-list --count HEAD)
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD" "$TARGET_BUILD_DIR/$INFOPLIST_PATH"
+        basedOnDependencyAnalysis: false
 
   ChessRecallTests:
     type: bundle.unit-test

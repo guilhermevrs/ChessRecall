@@ -1,5 +1,6 @@
 import Foundation
 import ChessKit
+import DatadogLogs
 
 /// Fetches puzzles from the Lichess public API and reconstructs puzzle FEN from PGN.
 actor LichessAPIService {
@@ -31,13 +32,50 @@ actor LichessAPIService {
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
-        let (data, response) = try await session.data(for: request)
+        AppLogger.shared.debug("lichess.fetch_puzzle.started")
+
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await session.data(for: request)
+        } catch {
+            AppLogger.shared.error(
+                "lichess.fetch_puzzle.network_error",
+                error: error,
+                attributes: ["url": url.absoluteString]
+            )
+            throw error
+        }
+
         guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+            AppLogger.shared.error(
+                "lichess.fetch_puzzle.bad_response",
+                attributes: ["status_code": statusCode, "url": url.absoluteString]
+            )
             throw APIError.badResponse
         }
 
-        let raw = try JSONDecoder().decode(LichessResponse.self, from: data)
-        return try buildStoredPuzzle(from: raw)
+        do {
+            let raw = try JSONDecoder().decode(LichessResponse.self, from: data)
+            let stored = try buildStoredPuzzle(from: raw)
+            AppLogger.shared.debug(
+                "lichess.fetch_puzzle.success",
+                attributes: [
+                    "puzzle_id": stored.id,
+                    "puzzle_rating": stored.rating,
+                    "themes_count": stored.themes.count
+                ]
+            )
+            return stored
+        } catch {
+            AppLogger.shared.error(
+                "lichess.fetch_puzzle.parse_failed",
+                error: error,
+                attributes: ["bytes_received": data.count]
+            )
+            throw error
+        }
     }
 
     /// Fetches `count` puzzles with a short delay between requests to be polite.

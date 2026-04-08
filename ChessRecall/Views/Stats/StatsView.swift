@@ -1,4 +1,5 @@
 import SwiftUI
+import DatadogRUM
 
 struct StatsView: View {
     @StateObject private var viewModel = StatsViewModel()
@@ -14,7 +15,28 @@ struct StatsView: View {
         }
         .navigationTitle("Stats")
         .navigationBarTitleDisplayMode(.large)
-        .task { await viewModel.load() }
+        .task {
+            let opKey = UUID().uuidString
+            RUMMonitor.shared().startFeatureOperation(
+                name: "stats_load",
+                operationKey: opKey,
+                attributes: [:]
+            )
+            await viewModel.load()
+            RUMMonitor.shared().succeedFeatureOperation(
+                name: "stats_load",
+                operationKey: opKey,
+                attributes: [
+                    "overall_accuracy": viewModel.overallSuccessRate,
+                    "theme_count": viewModel.themeStats.count,
+                    "total_solved": viewModel.totalSolved
+                ]
+            )
+            RUMMonitor.shared().addViewAttribute(
+                forKey: "stats.overall_accuracy",
+                value: viewModel.overallSuccessRate
+            )
+        }
     }
 
     private var statsContent: some View {

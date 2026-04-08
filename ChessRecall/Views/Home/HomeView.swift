@@ -1,4 +1,5 @@
 import SwiftUI
+import DatadogRUM
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
@@ -53,6 +54,14 @@ struct HomeView: View {
 
             // Start button
             Button {
+                RUMMonitor.shared().addAction(
+                    type: .tap,
+                    name: "home.start_training_tapped",
+                    attributes: [
+                        "due_count": viewModel.duePuzzleCount,
+                        "total_count": viewModel.totalPuzzleCount
+                    ]
+                )
                 showingPuzzle = true
             } label: {
                 HStack {
