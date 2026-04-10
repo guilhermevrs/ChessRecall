@@ -75,16 +75,17 @@ datadog-ci dsyms upload "$ARCHIVE_PATH/dSYMs"
 
 # ── Install on connected device ───────────────────────────────────────────────
 APP_PATH="$ARCHIVE_PATH/Products/Applications/ChessRecall.app"
-DEVICE_ID=$(xcrun devicectl list devices --json-output /dev/stdout 2>/dev/null \
-  | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
+DEVICES_JSON=$(mktemp /tmp/devices.XXXXXX.json)
+xcrun devicectl list devices --json-output "$DEVICES_JSON" > /dev/null 2>&1
+DEVICE_ID=$(python3 -c "
+import json, sys
+data = json.load(open('$DEVICES_JSON'))
 devices = [d for d in data.get('result', {}).get('devices', [])
-           if d.get('connectionProperties', {}).get('tunnelState') == 'connected'
-           or d.get('connectionProperties', {}).get('transportType') == 'wired']
+           if d.get('connectionProperties', {}).get('pairingState') == 'paired']
 if devices:
-    print(devices[0]['hardwareProperties']['udid'])
+    print(devices[0]['connectionProperties']['localHostnames'][1].split('.')[0])
 " 2>/dev/null)
+rm -f "$DEVICES_JSON"
 
 if [ -n "$DEVICE_ID" ]; then
   echo "→ Installing on device $DEVICE_ID..."
