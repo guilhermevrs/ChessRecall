@@ -82,8 +82,9 @@ struct ChessRecallApp: App {
             with: SessionReplay.Configuration(
                 replaySampleRate: 100,
                 textAndInputPrivacyLevel: .maskSensitiveInputs,
-                imagePrivacyLevel: .maskNonBundledOnly,
-                touchPrivacyLevel: .show
+                imagePrivacyLevel: .maskNone,
+                touchPrivacyLevel: .show,
+                featureFlags: [.swiftui: true]
             )
         )
 
