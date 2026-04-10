@@ -52,6 +52,11 @@ git commit -m "chore: release $VERSION"
 git tag -a "v$VERSION" -m "Release $VERSION"
 echo "→ Tagged v$VERSION"
 
+# ── Ensure Xcode is running (required for automatic provisioning) ─────────────
+echo "→ Ensuring Xcode is running..."
+open -a Xcode
+sleep 5
+
 # ── Archive ───────────────────────────────────────────────────────────────────
 echo "→ Archiving for release (this takes a moment)..."
 xcodebuild archive \
@@ -75,8 +80,8 @@ DEVICE_ID=$(xcrun devicectl list devices --json-output /dev/stdout 2>/dev/null \
 import sys, json
 data = json.load(sys.stdin)
 devices = [d for d in data.get('result', {}).get('devices', [])
-           if d.get('connectionProperties', {}).get('pairingState') == 'paired'
-           and d.get('connectionProperties', {}).get('transportType') != 'localNetwork']
+           if d.get('connectionProperties', {}).get('tunnelState') == 'connected'
+           or d.get('connectionProperties', {}).get('transportType') == 'wired']
 if devices:
     print(devices[0]['hardwareProperties']['udid'])
 " 2>/dev/null)

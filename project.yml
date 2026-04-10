@@ -60,7 +60,7 @@ targets:
         SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
         SUPPORTS_MACCATALYST: "NO"
         GENERATE_INFOPLIST_FILE: "NO"
-        DEVELOPMENT_TEAM: U5PV2566L6
+        DEVELOPMENT_TEAM: 3KJ42RM854
         CODE_SIGN_STYLE: Automatic
     postBuildScripts:
       - name: Set Build Number from Git
