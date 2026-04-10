@@ -97,6 +97,11 @@ struct HomeView: View {
                     .foregroundStyle(.red)
                     .padding(.bottom, 8)
             }
+
+            Text(appVersion)
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+                .padding(.bottom, 8)
         }
         .padding()
         .navigationDestination(isPresented: $showingPuzzle) {
@@ -107,6 +112,12 @@ struct HomeView: View {
         }
         .task { await viewModel.onAppear() }
         .refreshable { await viewModel.onAppear() }
+    }
+
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+        return "v\(version) (\(build))"
     }
 
     private func statBadge(value: String, label: String, color: Color) -> some View {
