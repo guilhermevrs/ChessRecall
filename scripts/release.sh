@@ -64,10 +64,30 @@ xcodebuild archive \
   CODE_SIGN_STYLE=Automatic
 
 # ── Upload dSYMs to Datadog ───────────────────────────────────────────────────
-# BUILD_NUMBER mirrors the "Set Build Number from Git" Xcode build phase
 BUILD_NUMBER=$(git rev-list --count HEAD)
 echo "→ Uploading dSYMs (version=$VERSION build=$BUILD_NUMBER)..."
 datadog-ci dsyms upload "$ARCHIVE_PATH/dSYMs"
+
+# ── Install on connected device ───────────────────────────────────────────────
+APP_PATH="$ARCHIVE_PATH/Products/Applications/ChessRecall.app"
+DEVICE_ID=$(xcrun devicectl list devices --json-output /dev/stdout 2>/dev/null \
+  | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+devices = [d for d in data.get('result', {}).get('devices', [])
+           if d.get('connectionProperties', {}).get('pairingState') == 'paired'
+           and d.get('connectionProperties', {}).get('transportType') != 'localNetwork']
+if devices:
+    print(devices[0]['hardwareProperties']['udid'])
+" 2>/dev/null)
+
+if [ -n "$DEVICE_ID" ]; then
+  echo "→ Installing on device $DEVICE_ID..."
+  xcrun devicectl device install app --device "$DEVICE_ID" "$APP_PATH"
+else
+  echo "⚠ No connected device found — skipping install."
+  echo "  To install manually: xcrun devicectl device install app --device <udid> \"$APP_PATH\""
+fi
 
 echo ""
 echo "✓ Release $VERSION (build $BUILD_NUMBER) complete."
