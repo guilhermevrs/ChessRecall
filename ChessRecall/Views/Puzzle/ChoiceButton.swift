@@ -21,6 +21,7 @@ struct ChoiceButton: View {
                         .stroke(borderColor, lineWidth: isSelected ? 2 : 1)
                 )
         }
+        .accessibilityIdentifier("ChoiceButton")
         .disabled(isRevealed)
     }
 

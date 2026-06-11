@@ -19,6 +19,7 @@ set -euo pipefail
 readonly DD_SERVICE="chess-recall-ios"
 readonly DATADOG_SITE="datadoghq.eu"
 readonly DD_KEYCHAIN_SERVICE="datadog-chess-recall"
+readonly DD_MOBILE_APP_ID="5824071b-e650-44bf-a839-600edfa29952"
 
 # ── Xcode config ──────────────────────────────────────────────────────────────
 readonly PROJECT="ChessRecall.xcodeproj"
@@ -41,6 +42,18 @@ DATADOG_API_KEY=$(security find-generic-password \
 }
 export DATADOG_API_KEY
 export DATADOG_SITE
+
+# ── Read DD_APP_KEY from macOS Keychain ───────────────────────────────────────
+echo "→ Reading DD_APP_KEY from Keychain..."
+DATADOG_APP_KEY=$(security find-generic-password \
+  -s "${DD_KEYCHAIN_SERVICE}-appkey" -a "$USER" -w 2>/dev/null) || {
+  echo ""
+  echo "Error: DD_APP_KEY not found in Keychain."
+  echo "Store it once with:"
+  echo "  security add-generic-password -s \"${DD_KEYCHAIN_SERVICE}-appkey\" -a \"\$USER\" -w \"<your-app-key>\""
+  exit 1
+}
+export DATADOG_APP_KEY
 
 # ── Bump CFBundleShortVersionString ───────────────────────────────────────────
 echo "→ Bumping version to $VERSION..."
@@ -72,6 +85,21 @@ xcodebuild archive \
 BUILD_NUMBER=$(git rev-list --count HEAD)
 echo "→ Uploading dSYMs (version=$VERSION build=$BUILD_NUMBER)..."
 datadog-ci dsyms upload "$ARCHIVE_PATH/dSYMs"
+
+# ── Upload IPA to Datadog Synthetics ─────────────────────────────────────────
+IPA_PATH="/tmp/ChessRecall-release.ipa"
+echo "→ Packaging IPA for Synthetics upload..."
+rm -rf /tmp/Synthetics-Payload
+mkdir -p /tmp/Synthetics-Payload/Payload
+cp -r "$APP_PATH" /tmp/Synthetics-Payload/Payload/
+(cd /tmp/Synthetics-Payload && zip -qr "$IPA_PATH" Payload)
+
+echo "→ Uploading to Datadog Synthetics (version=$VERSION build=$BUILD_NUMBER)..."
+datadog-ci synthetics upload-application \
+  --mobileApplicationId "$DD_MOBILE_APP_ID" \
+  --mobileApplicationVersionFilePath "$IPA_PATH" \
+  --versionName "$VERSION ($BUILD_NUMBER)" \
+  --latest
 
 # ── Install on connected device ───────────────────────────────────────────────
 APP_PATH="$ARCHIVE_PATH/Products/Applications/ChessRecall.app"
